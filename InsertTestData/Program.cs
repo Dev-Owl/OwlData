@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.CommandLineUtils;
-using System;
+﻿using System;
 
 namespace OwlData
 {
@@ -7,20 +6,65 @@ namespace OwlData
     {
         static void Main(string[] args)
         {
-            var app = new CommandLineApplication(throwOnUnexpectedArg: false);
-            app.Command("data", (command) =>
+            var ErrorStopMessageTemplate = "An error occoured: \"{0}\" press enter to exit!";
+            var importHandler = new ImportHandler();
+            for (int i = 0; i < args.Length; ++i)
             {
-                command.Description = "Path to the folder with the json data to load";
-                var dataPath = command.Argument("[dataPath]", "Path to the folder with the json data to load", false);
-                command.OnExecute(() =>
+                switch (args[i].ToLower())
                 {
-                    Console.WriteLine($"Hello Data in {dataPath.Value}");
-                    return 0;
-                });
-            });
-            app.Execute(args);
-            //Load all .json files from provided path and upload them with the provided data to the CouchDb
-            Console.WriteLine("Done");
+                    case "-data":
+                        {
+                            if (i + 1 < args.Length)
+                                importHandler.DataPath = args[++i];
+                        }
+                        break;
+                    case "-server":
+                        {
+                            if (i + 1 < args.Length)
+                                importHandler.DatabaseURL = args[++i];
+                        }
+                        break;
+                    case "-usr":
+                        {
+                            if (i + 1 < args.Length)
+                                importHandler.DatabaseUser = args[++i];
+                        }
+                        break;
+                    case "-pwd":
+                        {
+                            if (i + 1 < args.Length)
+                                importHandler.DatabasePassword = args[++i];
+                        }
+                        break;
+                    case "db":
+                        {
+                            if (i + 1 < args.Length)
+                                importHandler.DatabaseName = args[++i];
+                        }
+                        break;
+                    default:
+                        {
+                            Console.WriteLine($"Unkown command {args[i]}");
+                        }
+                        break;
+                }
+            }
+
+            try
+            {
+                importHandler.RunImport();
+                Console.WriteLine("Finished without errors, press enter to exit");
+            }
+            catch (ImportException Ex)
+            {
+                Console.WriteLine(string.Format(ErrorStopMessageTemplate, Ex.Message));
+            }
+            catch (Exception Ex)
+            {
+                Console.WriteLine(Ex.ToString());
+                Console.WriteLine("System error, enter to exit");
+            }
+            
             Console.ReadLine();
 
         }

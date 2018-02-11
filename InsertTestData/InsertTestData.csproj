@@ -6,9 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="RestSharp" Version="106.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="pillowsharp">
+      <HintPath>..\..\..\..\source\repos\pillowsharp\src\libary\bin\Release\netstandard2.0\pillowsharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
