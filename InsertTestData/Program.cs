@@ -36,7 +36,7 @@ namespace OwlData
                                 importHandler.DatabasePassword = args[++i];
                         }
                         break;
-                    case "db":
+                    case "-db":
                         {
                             if (i + 1 < args.Length)
                                 importHandler.DatabaseName = args[++i];
