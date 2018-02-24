@@ -8,21 +8,25 @@ namespace ValidationFunctions
 
         public const string LENGTH = "length";
 
-        public bool MinLength(object Value, Dictionary<string, Object> Addtional)
+        public bool MinLength(Dictionary<string,object> Entity,string Propertey, Dictionary<string, Object> Addtional)
         {
-            if(Value is null)
+            if (!Entity.ContainsKey(Propertey))
                 return false;
-            if(Value is string)
-                return Value.ToString().Length >= Convert.ToInt64(Addtional[LENGTH]);
+            if (Entity[Propertey] is null)
+                return false;
+            if(Entity[Propertey] is string)
+                return Entity[Propertey].ToString().Length >= Convert.ToInt64(Addtional[LENGTH]);
             return false;
         }
 
-        public bool MaxLength(object Value, Dictionary<string, Object> Addtional)
+        public bool MaxLength(Dictionary<string, object> Entity,string Propertey, Dictionary<string, Object> Addtional)
         {
-            if (Value is null)
+            if (!Entity.ContainsKey(Propertey))
+                return false;
+            if (Entity[Propertey] is null)
                 return true;
-            if (Value is string)
-                return Value.ToString().Length <= Convert.ToInt64(Addtional[LENGTH]);
+            if (Entity[Propertey] is string)
+                return Entity[Propertey].ToString().Length <= Convert.ToInt64(Addtional[LENGTH]);
             return false;
         }
 

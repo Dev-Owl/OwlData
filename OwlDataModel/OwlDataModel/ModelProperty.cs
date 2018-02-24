@@ -45,12 +45,11 @@ namespace OwlDataModel
             try
             {
                 var validationManager = ValidationManager.GetActiveValidationManager();
-                var propertyValue = ParentModel.Entity[Name];
                 List<float> validationScoreList = new List<float>();
                 Parallel.For(0, ValidationFunctions.Count, index =>
                  {
                      var currentFunction = ValidationFunctions[index];
-                     if (validationManager.KnownFunctions.CheckFunctionExistsAndExecute(currentFunction, propertyValue))
+                     if (validationManager.KnownFunctions.CheckFunctionExistsAndExecute(currentFunction, ParentModel.Entity,this.Name))
                          validationScoreList.Add(currentFunction.Score);
                      else
                          validationScoreList.Add(0F);

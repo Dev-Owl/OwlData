@@ -25,7 +25,7 @@ namespace ValidationFunctions
             KnownFunctions =  new FunctionDictionary();
         }
 
-        public void Add(string Name, Func<object, Dictionary<string, Object>, bool> Function)
+        public void Add(string Name, Func<Dictionary<string, object>, string, Dictionary<string, Object>, bool> Function)
         {
             if (!KnownFunctions.ContainsKey(Name))
                 KnownFunctions.Add(Name, Function);
