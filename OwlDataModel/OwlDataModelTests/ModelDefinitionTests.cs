@@ -203,5 +203,11 @@ namespace OwlDataModelTests
             Assert.NotNull(ValidationManager.GetActiveValidationManager());
         }
 
+        [Fact]
+        public void ValidationManagerContainsBuildInFunctions()
+        {
+            var validationManager = ValidationManager.GetActiveValidationManager();
+            Assert.True(validationManager.KnownFunctions.Any());
+        }
     }
 }
