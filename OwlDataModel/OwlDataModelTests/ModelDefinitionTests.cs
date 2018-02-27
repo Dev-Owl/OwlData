@@ -209,5 +209,66 @@ namespace OwlDataModelTests
             var validationManager = ValidationManager.GetActiveValidationManager();
             Assert.True(validationManager.KnownFunctions.Any());
         }
+
+        [Fact]
+        public void CheckValidationForMissingPropertyInEntity()
+        {
+            ModelDefinition newModel = new ModelDefinition();
+            newModel.CreateModelPropertyList(new List<OwlDataModel.DTO.ModelPropertyDTO>() {
+                new OwlDataModel.DTO.ModelPropertyDTO()
+                {
+                    Name="Name",
+                    Required=true,
+                    Type = PropertyType.String,
+                    ValidationFunctions = new List<ValidationFunction>()
+                    {
+                        new ValidationFunction()
+                        {
+                            FunctionName ="MinLength",
+                            OptionalParameter = new Dictionary<string, object>(){ {"length",5 } },
+                            Score = 1F
+                        },
+                        new ValidationFunction()
+                        {
+                            FunctionName ="MaxLength",
+                            OptionalParameter = new Dictionary<string, object>(){ {"length",15 } },
+                            Score = 1F
+                        }
+                    }
+                },
+                new OwlDataModel.DTO.ModelPropertyDTO()
+                {
+                    Name="LastName",
+                    Required=false,
+                    Type = PropertyType.String,
+                    ValidationFunctions = new List<ValidationFunction>()
+                    {
+                        new ValidationFunction()
+                        {
+                            FunctionName ="MinLength",
+                            OptionalParameter = new Dictionary<string, object>(){ {"length",5 } },
+                            Score = 1F
+                        },
+                        new ValidationFunction()
+                        {
+                            FunctionName ="MaxLength",
+                            OptionalParameter = new Dictionary<string, object>(){ {"length",15 } },
+                            Score = 1F
+                        }
+                    }
+                }
+            });
+            Assert.NotEmpty(newModel.Properties);
+            var property = newModel.Properties.FirstOrDefault();
+            Assert.NotNull(property);
+            Assert.NotEmpty(property.ValidationFunctions);
+            newModel.ResetScoreAndLoadNewEntity(new Dictionary<string, object>() { { "Name", "Hans Dieter" }, { "SureName", null } });
+            Assert.NotNull(newModel.Entity);
+            Assert.True(newModel.Properties.CheckAllRequiredPropertiesExists());
+            newModel.Properties.GenerateScoreForProperties();
+            Assert.Equal(1F, newModel.Properties[0].Score);
+            Assert.Equal(0F, newModel.Properties[1].Score);
+            Assert.Equal(0.5F, newModel.Properties.CalculateTotalScore());
+        }
     }
 }
